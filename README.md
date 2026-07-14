@@ -1,58 +1,75 @@
-# APS Fault Detection & BI Dashboard — Financial Reporting
+# APS Truck Sensor Fault Detection
 
-Predictive anomaly detection system for Air Pressure System (APS) failures, paired with Power BI dashboards for operational KPI reporting and root cause analysis.
+Binary classification project predicting Air Pressure System (APS) component
+failures in heavy-duty trucks from sensor data, with a Power BI layer added
+on top of the model to visualise predictions and failure risk.
 
 ## Overview
 
-This project combines machine learning-based anomaly detection with business intelligence dashboards to deliver actionable insights to non-technical stakeholders across financial operations.
+The core problem: given ~171 anonymised sensor readings per truck, predict
+whether a component failure is caused by the APS system or something else.
+The dataset is highly imbalanced (positive class is a small minority) and
+has heavy missingness across many columns, making this a good exercise in
+imbalanced classification and cost-sensitive evaluation — false negatives
+(missed failures) are far more costly than false positives (unnecessary
+checks).
 
-**Two components:**
-1. **Predictive Model** — XGBoost classifier trained on Scania truck APS sensor data to detect component failure risk, applying techniques transferable to fraud detection and financial anomaly detection
-2. **BI Dashboard** — Interactive Power BI dashboards with DAX-calculated KPIs to communicate model outputs, track operational performance, and enable root cause identification
+## Components
 
-## Anomaly Detection Model
+1. **Predictive model** — XGBoost classifier trained on the Scania truck
+   APS sensor dataset, tuned to handle severe class imbalance
+2. **Power BI dashboard** — visualises the model's outputs: predictions,
+   failure rates, and feature importance, to make the model's behaviour
+   interpretable at a glance
 
-- Built using **XGBoost** with hyperparameter tuning, achieving strong precision-recall trade-offs on highly imbalanced data
-- Replaced rule-based detection thresholds with statistical models, **reducing false positive rates by 18%** across 100k+ monthly records
-- Applied **Isolation Forest** and **LSTM Autoencoders** as alternative approaches for comparison
+## Model
+
+- XGBoost classifier with hyperparameter tuning on high-dimensional,
+  highly imbalanced sensor data
+- Evaluation accounts for asymmetric misclassification costs (missed
+  failures cost significantly more than false alarms)
+- Handles substantial missing data across sensor readings
 
 ## Power BI Dashboard
 
-- Designed interactive dashboards with **DAX-calculated KPIs** tracking failure rates, component reliability trends, and detection model performance
-- Created optimised **data models** linking multiple data sources to ensure accuracy and consistency across reporting outputs
-- Documented dashboard functionality, data definitions, and reporting logic to maintain standards and support continuity
-- Iterated on visualisations based on stakeholder feedback to improve clarity and speed up insight retrieval
+- Visualises model predictions and predicted failure rates
+- Feature importance view showing which sensor readings drive the model's
+  decisions
+- Built as a lightweight interpretability layer on top of the model output,
+  not a production monitoring system
 
 ## Technology Stack
 
 | Component | Technology |
 |-----------|-----------|
-| Predictive modelling | Python, XGBoost, Scikit-learn, Isolation Forest, LSTM Autoencoders |
+| Predictive modelling | Python, XGBoost, Scikit-learn |
 | Data processing | Pandas, NumPy |
-| Visualisation | Power BI, DAX, Power Query |
-| Database | SQL |
+| Visualisation | Power BI |
 | Environment | Jupyter Notebook |
 
-## Results
+## Dataset
 
-| Metric | Improvement |
-|--------|------------|
-| False positive rate | **Reduced by 18%** |
-| Records processed | **100k+ monthly** |
-| Stakeholder reporting | **Automated via Power BI** |
-| Detection method | **Rule-based → Statistical models** |
+Scania truck APS sensor dataset (static, single training/test split —
+not a live or monthly-updating data source). Anonymised sensor columns,
+severe class imbalance, substantial missing values.
 
 ## Repository Structure
 
 ```
-├── notebooks/          # Jupyter notebooks for EDA and model development
-├── src/                # Source code for data processing and model training
-├── data/               # Sample data (anonymised)
-├── docs/               # Documentation and dashboard screenshots
+├── notebooks/          # EDA and model development
+├── src/                # Data processing and model training code
+├── data/                # Sample sensor data (anonymised)
+├── docs/                # Dashboard screenshots
 └── README.md
 ```
 
----
+## Notes
 
-**Author:** Adwait Sawant  
-**Contact:** adwait191@gmail.com · [LinkedIn](https://www.linkedin.com/in/adwaitsawant/) · [GitHub](https://github.com/dragonemperor123)
+This project started from a well-known public APS fault detection template
+and was extended with a Power BI visualisation layer for model
+interpretability. It's a learning/portfolio project, not a production
+system.
+
+---
+**Author:** Adwait Sawant
+**Contact:** adwait191@gmail.com
